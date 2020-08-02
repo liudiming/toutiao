@@ -1,3 +1,4 @@
+// 引入Vue的组件
 import Vue from 'vue'
 // 引入app的组件
 import App from './App.vue'

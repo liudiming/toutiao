@@ -1,37 +1,41 @@
-<!-- 主页的组件 -->
+<!-- 首页左边导航条 -->
 <template>
-<div class=''>
-  <!-- 主页Header的开始 -->
-  <div class="tt-home-header">
-    <span>zelin头条</span>
-  </div>
-  <!-- 主页Header的结束 -->
-  <!-- 主页内容开始 -->
-  <div class="tt-home-cont">
-    <div class="home-cont-left">
-      <Nav></Nav>
-    </div>
-    <div class="home-cont-middle">中间</div>
-    <div class="home-cont-right">右边</div>
-  </div>
-<!-- 主页内容结束 -->
+<div class='app-home-nav'>
+    <h1>头条</h1>
+    <section class="nav-list">
+        <section class="nav-list-item" 
+        v-for="nav,index in navs"
+        :key="nav.id"
+        >
+        {{nav.text}}</section>
+    </section>
 </div>
 </template>
 
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
-import Nav from "../components/Nav"
 
 export default {
 //import引入的组件需要注入到对象中才能使用
-components: {
-  Nav
-},
+components: {},
 data() {
 //这里存放数据
 return {
-
+    navs:[
+        {id:1,text:"推荐"},
+        {id:2,text:"西瓜视频"},
+        {id:3,text:"财经"},
+        {id:4,text:"热点"},
+        {id:5,text:"直播"},
+        {id:6,text:"图片"},
+        {id:7,text:"科技"},
+        {id:8,text:"娱乐"},
+        {id:9,text:"游戏"},
+        {id:10,text:"体育"},
+        {id:11,text:"懂车帝"},
+        {id:12,text:"热点"},
+    ]
 };
 },
 //监听属性 类似于data概念
@@ -60,30 +64,26 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 }
 </script>
 <style lang='less' scoped>
-  .tt-home-header{
-    height: 30px;
-    line-height: 30px;
-    background: #000;
-    padding-left: 5px;
-    span{
-      color: #fff;
-    }
+.app-home-nav {
+  h1 {
+      color: #ea4245;
+      font-size: 20px;
+      font-weight: 100;
+      text-align: center;
   }
-  .tt-home-cont{
-    width: 80vw;
 
-    margin: 0 auto;
-    background: pink;
-    display: flex;
-    justify-content: space-between;
-    .home-cont-left{
-      flex: 1;
+  .nav-list {
+    .nav-list-item {
+        text-align: center;
+        height: 40px;
+        line-height: 40px;
+        transition: all .2s;
     }
-    .home-cont-middle{
-      flex: 3;
-    }
-    .home-cont-right{
-      flex: 2;
+    .nav-list-item:hover{
+        background: #ea4245;
+        color: #fff;
+        border-radius: 5px;
     }
   }
+}
 </style>

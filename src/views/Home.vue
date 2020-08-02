@@ -45,7 +45,9 @@
           <input class="article-input" 
           v-model="title"
           type="text">
-          <vue-editor id="editor"  v-model="html_cont"> </vue-editor>
+          <vue-editor id="editor"  
+          use-custom-image-handler @image-added="handleImageAdded"
+          v-model="html_cont"> </vue-editor>
           <section class="article-publish">
             <span class="publish-title"
             @click="publishArticle"
@@ -140,7 +142,43 @@ methods: {
     }).catch(err=>{
       console.log(err)
     })
-  }
+  },
+  // 添加图片上传的方法
+  handleImageAdded: function(f, Editor, cursorLocation, resetUploader) {
+      // An example of using FormData
+      // NOTE: Your key could be different such as:
+      // formData.append('file', file)
+
+      var formData = new FormData();
+      // 往表单数据中填充 file:file 数据
+      formData.append("file", f);
+      // console.log(file)
+      this.$axios({
+        url:"/aliossUpload",
+        method:"POST",
+        data:formData,
+      }).then(res=>{
+        let url = res.url; // Get url from response
+        // Editor是富文本编辑器的实例
+        Editor.insertEmbed(cursorLocation, "image", url);
+        resetUploader();
+      }).catch(err=>{
+        console.log(err)
+      })
+      // axios({
+      //   url: "https://fakeapi.yoursite.com/images",
+      //   method: "POST",
+      //   data: formData
+      // })
+      //   .then(result => {
+      //     let url = result.data.url; // Get url from response
+      //     Editor.insertEmbed(cursorLocation, "image", url);
+      //     resetUploader();
+      //   })
+      //   .catch(err => {
+      //     console.log(err);
+      //   });
+    }
 },
 //生命周期 - 创建完成（可以访问当前this实例）
 created() {
@@ -220,7 +258,7 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
           align-items: center;
           section.left {
             span.title {
-
+              color: #000;
             }
           }
 
@@ -264,7 +302,7 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
       }
     }
     .cont-middle-bottom {
-
+      color: #fff;
     }
   }
     .home-cont-right{

@@ -7,7 +7,15 @@ import router from './router'
 // 引入vuex的配置
 import store from './store'
 
+// 
+// import HighchartsVue from 'highcharts-vue'
 
+// 引入axios
+import axios from './common/myaxios'
+// 在Vue的原型上添加$axios
+Vue.prototype.$axios = axios
+
+// 
 Vue.config.productionTip = false
 // 创建一个vue的实例
 new Vue({

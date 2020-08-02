@@ -47,8 +47,17 @@ created() {
 
 },
 //生命周期 - 挂载完成（可以访问DOM元素）
-mounted() {
-
+async mounted() {
+  // http://tt.linweiqin.com/api/tt/getArticles?lastid=08&&type="TT"&&page=1&&number=20
+  let res = await this.$axios.get('getArticles',{
+    params:{
+      lastid:0,
+      type:"TT",
+      page:1,
+      number:20
+    }
+  })
+  console.log(res)
 },
 beforeCreate() {}, //生命周期 - 创建之前
 beforeMount() {}, //生命周期 - 挂载之前
@@ -73,7 +82,6 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
     width: 80vw;
 
     margin: 0 auto;
-    background: pink;
     display: flex;
     justify-content: space-between;
     .home-cont-left{

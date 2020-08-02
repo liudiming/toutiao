@@ -15,6 +15,10 @@ import axios from './common/myaxios'
 // 在Vue的原型上添加$axios
 Vue.prototype.$axios = axios
 
+// 引入elment-ui 组件库
+import {Message} from "element-ui"
+Vue.prototype.$message = Message
+
 // 
 Vue.config.productionTip = false
 // 创建一个vue的实例

@@ -7,6 +7,11 @@ import axios from 'axios'
 axios.defaults.baseURL = process.env.VUE_APP_URL
 // 配置一个拦截器
 axios.interceptors.request.use(function(config){
+    // KwiVWLCxXax3rRcVsmgX7shQGhtBtXnS
+    let data = config.data || {} //get请求时候是没有data  防御性代码
+    data["oauth_token"] = "KwiVWLCxXax3rRcVsmgX7shQGhtBtXnS"
+    config.data = data 
+    // console.log(config)
     return config
 },function(error){
     return Promise.reject(error)

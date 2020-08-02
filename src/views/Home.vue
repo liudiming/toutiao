@@ -11,7 +11,51 @@
     <div class="home-cont-left">
       <Nav></Nav>
     </div>
-    <div class="home-cont-middle">中间</div>
+    <div class="home-cont-middle">
+      <div class="cont-middle-top">
+        <section class="middle-top-tab">
+          <section :class="['top-tab-item',{'active':activeTab === tab.type}]"
+          v-for="tab in tabs"
+          @click="handleTabChange(tab.type)"
+          :key="tab.id"
+          >
+          {{tab.text}}
+          </section>
+        </section>
+      </div>
+      <!-- 显示发头条编辑部分的开始 -->
+      <div class="cont-middle-mid">
+        <section v-show="activeTab==='tt'">
+          <textarea name="" id="" 
+          placeholder="写点什么吧"
+          v-model="content"
+          cols="30" rows="10"></textarea>
+          <section class="mid-bottom">
+            <section class="left">
+              <span class="title">图片</span>
+            </section>
+            <section class="right"
+            @click.stop="publishTT"
+            >
+              发布
+            </section>
+          </section>
+        </section>
+        <section class="article-cont" v-show="activeTab==='article'">
+          <input class="article-input" 
+          v-model="title"
+          type="text">
+          <vue-editor id="editor"  v-model="html_cont"> </vue-editor>
+          <section class="article-publish">
+            <span class="publish-title"
+            @click="publishArticle"
+            >发布</span>
+            </section>
+        </section>
+      </div>
+      <!-- 显示发头条编辑部分的结束 -->
+      <div class="cont-middle-bottom"></div>
+    </div>
     <div class="home-cont-right">右边</div>
   </div>
 <!-- 主页内容结束 -->
@@ -22,16 +66,24 @@
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
 import Nav from "../components/Nav"
-
+// 引入富文本编辑器
+import { VueEditor } from "vue2-editor";
 export default {
 //import引入的组件需要注入到对象中才能使用
 components: {
-  Nav
+  Nav,VueEditor,
 },
 data() {
 //这里存放数据
 return {
-
+  tabs:[
+    {id:1,text:"发微头条",type:"tt"},
+    {id:2,text:"写文章",type:"article"}
+  ],
+  activeTab:"article",  //tt 头条  article 文章
+  content:'',
+  title:'',   //富文本标题
+  html_cont:''  //富文本编辑内容
 };
 },
 //监听属性 类似于data概念
@@ -40,7 +92,55 @@ computed: {},
 watch: {},
 //方法集合
 methods: {
+  // 切换激活的tab
+  handleTabChange:function(activeTab){
+    this.activeTab = activeTab
+  },
+  publishTT:function(){
+    let content = this.content
+    if(!content){
+      // 内容为空，alert
+      // todo 换成elementUI message
+      // alert("输入不能为空")
+      this.$message({
+        message:"输入不能为空!",
+        type:"warning"
+      });
+      return
+    }
+    this.$axios.post("/createTT",{
+      content:content,
+      imgs:'',
+      oauth_token:""
+    }).then(res=>{
+      console.log(res)
+    }).catch(err=>console.log(err))
 
+    this.content = ''
+  },
+  publishArticle:function(){
+    let title = this.title
+    let html_cont = this.html_cont
+    if(!title || !html_cont){
+      // 内容为空，alert
+      // todo 换成elementUI message
+      // alert("输入不能为空")
+      this.$message({
+        message:"输入不能为空!",
+        type:"warning"
+      });
+      return
+    }
+    this.$axios.post("createArticle",{
+      content:html_cont,
+      img:'',
+      title:title
+    }).then(res=>{
+      console.log(res)
+    }).catch(err=>{
+      console.log(err)
+    })
+  }
 },
 //生命周期 - 创建完成（可以访问当前this实例）
 created() {
@@ -87,9 +187,86 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
     .home-cont-left{
       flex: 1;
     }
-    .home-cont-middle{
+    .home-cont-middle {
       flex: 3;
+    .cont-middle-top {
+      .middle-top-tab {
+        display: flex;
+        .top-tab-item {
+          height: 50px;
+          line-height: 50px;
+          width: 150px;
+          text-align: center;
+        }
+        .active{
+          color:#b1e5ff;
+          border-bottom: 2px solid #f1545a;
+        }
+      }
     }
+
+
+   .cont-middle-mid {
+      section {
+        textarea {
+          width: 100%;
+          margin-top: 15px;
+        }
+
+        section.mid-bottom {
+          display: flex;
+          justify-content: space-between;
+          height: 40px;
+          align-items: center;
+          section.left {
+            span.title {
+
+            }
+          }
+
+          section.right {
+            width: 100px;
+            height: 30px;
+            background: #ea4245;
+            color: #fff;
+            line-height: 30px;
+            text-align: center;
+          }
+        }
+      }
+      .article-cont {
+        margin-top: 15px;
+        input.article-input {
+          width: 100%;
+          height: 30px;
+          margin-bottom: 10px;
+        }
+
+        #editor {
+          width: 100%;
+        }
+
+        .article-publish {
+          display: flex;
+          justify-content: flex-end;
+          .publish-title{
+            margin-top: 5px;
+            display: inline-block;
+            width: 120px;
+            height: 40px;
+            color: #fff;
+            background-color: #ea4245;
+            line-height: 40px;
+            text-align: center;
+            border-radius: 5px;
+          }
+        }
+      }
+    }
+    .cont-middle-bottom {
+
+    }
+  }
     .home-cont-right{
       flex: 2;
     }
